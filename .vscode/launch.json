@@ -13,6 +13,10 @@
 			"console": "integratedTerminal",
 			"internalConsoleOptions": "neverOpen",
 			"restart": true,
+			"env":{
+				"mongoDBPassword": "123",
+				"port": "3000"
+			}
 		}
 	]
 }
