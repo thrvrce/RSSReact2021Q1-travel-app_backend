@@ -1,0 +1,7 @@
+{
+	"inspect": true,
+	"ext": "ts, json, js",
+	"verbose": true,
+	"exec": "npm run tsnode",
+	"watch": ["src"]
+}
