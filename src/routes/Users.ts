@@ -1,5 +1,9 @@
 import { Router } from "express";
-import { registration, authorizeViaLogin } from "../storage/Users";
+import {
+  registration,
+  authorizeViaLogin,
+  checkSession,
+} from "../storage/Users";
 
 const router = Router();
 
@@ -20,6 +24,17 @@ router.put("/authorization", async (req, res, next) => {
   res
     .status(status ? 200 : 401)
     .json(status ? { status, token, user } : { message: "User not found" });
+});
+
+router.put("/checksession", async (req, res) => {
+  const { status, user } = await checkSession(req.body.token);
+  res.status(status ? 200 : 401).json(
+    status
+      ? { status, user }
+      : {
+          message: "Session expired.",
+        }
+  );
 });
 
 export default router;

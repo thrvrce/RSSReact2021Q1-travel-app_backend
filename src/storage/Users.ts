@@ -8,6 +8,7 @@ import {
   authorizationResult,
   sessionSchema,
 } from "../Types";
+import { Session } from "node:inspector";
 
 function getPasswordHash(password: string): string {
   return md5(password + process.env.passwordSalt);
@@ -49,7 +50,7 @@ function createSession(login: string): sessionSchema {
 
 async function getCollectionDocumentFields(
   collection: Collection,
-  filterObj: { login: string }
+  filterObj: { login: string } | { token: string }
 ): Promise<any> {
   const document = await collection.findOne(filterObj);
   return document;
@@ -136,4 +137,23 @@ async function authorizeViaLogin({
   return result;
 }
 
-export { registration, authorizeViaLogin };
+async function checkSession(token: string): Promise<authorizationResult> {
+  const sessions = await sessionsCollection;
+  const session = await getCollectionDocumentFields(sessions, {
+    token,
+  });
+  let result: authorizationResult = setDefaultAuthorizationResult();
+  if (session) {
+    if (session.expiriesAt > new Date().toISOString()) {
+      sessions.updateOne(session, {
+        $set: { expiresAt: setSessionExpireTime() },
+      });
+      result = await setAuthorizationStatus(session.login);
+    } else {
+      deleteAllUserSessions(session.login);
+    }
+  }
+
+  return result;
+}
+export { registration, authorizeViaLogin, checkSession };
