@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import aa from "./sdfsd";
+import Users from "./routes/Users";
 
 function normalizePort(val: any) {
   const port = parseInt(val, 10);
@@ -21,6 +21,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+app.use("/", Users);
 
 app.use((req, res) => {
   res.status(404).json({

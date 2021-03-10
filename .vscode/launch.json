@@ -14,8 +14,11 @@
 			"internalConsoleOptions": "neverOpen",
 			"restart": true,
 			"env":{
-				"mongoDBPassword": "123",
-				"port": "3000"
+				"mongoDBPassword": "_Pa$Sw0rd",
+				"port": "3000",
+				"passwordSalt": "saltySalt123__$$",
+				"tokenSalt": "n0tSalt6uT$hug9ar_11",
+				"sessionExpireTimeInSeconds": "300"
 			}
 		}
 	]
