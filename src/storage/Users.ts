@@ -55,48 +55,6 @@ async function getCollectionDocumentFields(
   return document;
 }
 
-async function registration({
-  login,
-  email,
-  name,
-  password,
-}: userRegistrationData) {
-  const users = await usersCollection;
-  const isCredentialsAvaliable: boolean = await isEmailAndLoginAvailable(
-    users,
-    login,
-    email
-  );
-  const result: authorizationResult = {
-    status: false,
-    token: "",
-    user: null,
-  };
-  if (isCredentialsAvaliable) {
-    const newUser: userSchema = {
-      login,
-      email,
-      name,
-      passwordHash: getPasswordHash(password),
-    };
-    users.insertOne(newUser);
-    const insertedUser = await getCollectionDocumentFields(users, { login });
-    const sessions = await sessionsCollection;
-    sessions.insertOne(createSession(login));
-    const insertedSession = await getCollectionDocumentFields(sessions, {
-      login,
-    });
-    result.status = insertedUser !== null;
-    result.token = insertedSession.token;
-    result.user = {
-      login: insertedUser.login,
-      email: insertedUser.email,
-      name: insertedUser.name,
-    };
-  }
-  return result;
-}
-
 async function setAuthorizationStatus(
   login: string
 ): Promise<authorizationResult> {
@@ -129,6 +87,34 @@ function setDefaultAuthorizationResult(): authorizationResult {
 async function deleteAllUserSessions(login: string) {
   const sessions = await sessionsCollection;
   await sessions.deleteMany({ login });
+}
+
+async function registration({
+  login,
+  email,
+  name,
+  password,
+}: userRegistrationData) {
+  const users = await usersCollection;
+  const isCredentialsAvaliable: boolean = await isEmailAndLoginAvailable(
+    users,
+    login,
+    email
+  );
+  let result: authorizationResult = setDefaultAuthorizationResult();
+  if (isCredentialsAvaliable) {
+    const newUser: userSchema = {
+      login,
+      email,
+      name,
+      passwordHash: getPasswordHash(password),
+    };
+    users.insertOne(newUser);
+    const sessions = await sessionsCollection;
+    sessions.insertOne(createSession(login));
+    result = await setAuthorizationStatus(login);
+  }
+  return result;
 }
 
 async function authorizeViaLogin({
