@@ -5,7 +5,7 @@ import {
   userRegistrationData,
   loginCredentials,
   userSchema,
-  registrationResult,
+  authorizationResult,
   sessionSchema,
 } from "../Types";
 
@@ -67,7 +67,7 @@ async function registration({
     login,
     email
   );
-  const result: registrationResult = {
+  const result: authorizationResult = {
     status: false,
     token: "",
     user: null,
@@ -97,4 +97,57 @@ async function registration({
   return result;
 }
 
-export { registration };
+async function setAuthorizationStatus(
+  login: string
+): Promise<authorizationResult> {
+  const users = await usersCollection;
+  const sessions = await sessionsCollection;
+  const insertedUser = await getCollectionDocumentFields(users, { login });
+  const insertedSession = await getCollectionDocumentFields(sessions, {
+    login,
+  });
+
+  return {
+    status: insertedUser !== null,
+    token: insertedSession.token,
+    user: {
+      login: insertedUser.login,
+      email: insertedUser.email,
+      name: insertedUser.name,
+    },
+  };
+}
+
+function setDefaultAuthorizationResult(): authorizationResult {
+  return {
+    status: false,
+    token: "",
+    user: null,
+  };
+}
+
+async function deleteAllUserSessions(login: string) {
+  const sessions = await sessionsCollection;
+  await sessions.deleteMany({ login });
+}
+
+async function authorizeViaLogin({
+  login,
+  password,
+}: loginCredentials): Promise<authorizationResult> {
+  const users = await usersCollection;
+  const user = await users.findOne({
+    login,
+    passwordHash: getPasswordHash(password),
+  });
+  let result: authorizationResult = setDefaultAuthorizationResult();
+  if (user) {
+    await deleteAllUserSessions(login);
+    const sessions = await sessionsCollection;
+    await sessions.insertOne(createSession(login));
+    result = await setAuthorizationStatus(login);
+  }
+  return result;
+}
+
+export { registration, authorizeViaLogin };

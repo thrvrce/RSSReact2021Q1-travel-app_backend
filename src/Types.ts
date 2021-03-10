@@ -13,7 +13,7 @@ type userPublicData = {
 
 type userSchema = userPublicData & { passwordHash: string };
 
-type registrationResult = {
+type authorizationResult = {
   status: boolean;
   token: string;
   user: userPublicData | null;
@@ -28,6 +28,6 @@ export {
   userRegistrationData,
   loginCredentials,
   userSchema,
-  registrationResult,
+  authorizationResult,
   sessionSchema,
 };
