@@ -7,8 +7,12 @@ import {
   userSchema,
   authorizationResult,
   sessionSchema,
+  updateUser,
+  userPublicData,
+  documentUpdateResult,
+  userUpdateResult,
 } from "../Types";
-import { Session } from "node:inspector";
+import updateOneAnyDocument from "./commonFunctions";
 
 function getPasswordHash(password: string): string {
   return md5(password + process.env.passwordSalt);
@@ -56,7 +60,7 @@ async function getCollectionDocumentFields(
   return document;
 }
 
-async function setAuthorizationStatus(
+async function getAuthorizationResult(
   login: string
 ): Promise<authorizationResult> {
   const users = await usersCollection;
@@ -67,7 +71,7 @@ async function setAuthorizationStatus(
   });
 
   return {
-    status: insertedUser !== null,
+    authorizationStatus: insertedUser !== null,
     token: insertedSession.token,
     user: {
       login: insertedUser.login,
@@ -79,7 +83,7 @@ async function setAuthorizationStatus(
 
 function setDefaultAuthorizationResult(): authorizationResult {
   return {
-    status: false,
+    authorizationStatus: false,
     token: "",
     user: null,
   };
@@ -113,7 +117,7 @@ async function registration({
     users.insertOne(newUser);
     const sessions = await sessionsCollection;
     sessions.insertOne(createSession(login));
-    result = await setAuthorizationStatus(login);
+    result = await getAuthorizationResult(login);
   }
   return result;
 }
@@ -132,7 +136,7 @@ async function authorizeViaLogin({
     await deleteAllUserSessions(login);
     const sessions = await sessionsCollection;
     await sessions.insertOne(createSession(login));
-    result = await setAuthorizationStatus(login);
+    result = await getAuthorizationResult(login);
   }
   return result;
 }
@@ -148,7 +152,7 @@ async function checkSession(token: string): Promise<authorizationResult> {
       sessions.updateOne(session, {
         $set: { expiresAt: setSessionExpireTime() },
       });
-      result = await setAuthorizationStatus(session.login);
+      result = await getAuthorizationResult(session.login);
     } else {
       deleteAllUserSessions(session.login);
     }
@@ -162,4 +166,23 @@ async function logOut(login: string): Promise<boolean> {
   return true;
 }
 
-export { registration, authorizeViaLogin, checkSession, logOut };
+async function updateUSer({
+  filter,
+  updateFields,
+  token,
+}: updateUser): Promise<userUpdateResult> {
+  let updatedUser: userPublicData | null = null;
+  const docUpdResult: documentUpdateResult = await updateOneAnyDocument(
+    usersCollection,
+    filter,
+    updateFields,
+    token
+  );
+  if (docUpdResult.updateStatus) {
+    const { user } = await checkSession(token);
+    updatedUser = user;
+  }
+  return { ...docUpdResult, updatedUser };
+}
+
+export { registration, authorizeViaLogin, checkSession, logOut, updateUSer };

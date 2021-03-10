@@ -14,7 +14,7 @@ type userPublicData = {
 type userSchema = userPublicData & { passwordHash: string };
 
 type authorizationResult = {
-  status: boolean;
+  authorizationStatus: boolean;
   token: string;
   user: userPublicData | null;
 };
@@ -24,10 +24,36 @@ type sessionSchema = {
   token: string;
   expiriesAt: string;
 };
+
+type updateUser = {
+  filter: {
+    login: string;
+  };
+  updateFields: {
+    name: string;
+  };
+  token: string;
+};
+
+type documentUpdateResult = {
+  authorizationStatus: boolean;
+  updateStatus: boolean;
+  message: string;
+};
+
+type userUpdateResult = documentUpdateResult & {
+  updatedUser: userPublicData | null;
+};
+type updateAnyDocFilterObj = updateUser;
 export {
   userRegistrationData,
   loginCredentials,
   userSchema,
   authorizationResult,
   sessionSchema,
+  updateUser,
+  updateAnyDocFilterObj,
+  userPublicData,
+  documentUpdateResult,
+  userUpdateResult,
 };
