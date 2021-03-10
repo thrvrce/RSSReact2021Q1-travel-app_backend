@@ -3,6 +3,7 @@ import {
   registration,
   authorizeViaLogin,
   checkSession,
+  logOut,
 } from "../storage/Users";
 
 const router = Router();
@@ -35,6 +36,11 @@ router.put("/checksession", async (req, res) => {
           message: "Session expired.",
         }
   );
+});
+
+router.delete("/logout", async (req, res) => {
+  const status = await logOut(req.body.login);
+  res.status(200).json({ status });
 });
 
 export default router;

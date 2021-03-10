@@ -156,4 +156,10 @@ async function checkSession(token: string): Promise<authorizationResult> {
 
   return result;
 }
-export { registration, authorizeViaLogin, checkSession };
+
+async function logOut(login: string): Promise<boolean> {
+  deleteAllUserSessions(login);
+  return true;
+}
+
+export { registration, authorizeViaLogin, checkSession, logOut };
