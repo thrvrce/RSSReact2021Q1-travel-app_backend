@@ -101,6 +101,8 @@ async function registration({
   email,
   name,
   password,
+  imgSecureUrl,
+  imgPublicId,
 }: userRegistrationData) {
   const users = await usersCollection;
   const isCredentialsAvaliable: boolean = await isEmailAndLoginAvailable(
@@ -115,8 +117,8 @@ async function registration({
       email,
       name,
       passwordHash: getPasswordHash(password),
-      imgSecureUrl: "",
-      imgPublicId: "",
+      imgSecureUrl,
+      imgPublicId,
     };
     users.insertOne(newUser);
     const sessions = await sessionsCollection;

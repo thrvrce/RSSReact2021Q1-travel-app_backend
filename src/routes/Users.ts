@@ -8,21 +8,29 @@ import {
 } from "../storage/Users";
 
 import { userUpdateResult } from "../Types";
-import { loader, setImage } from "./Files";
+import { loader, setImage, deleteImage } from "./Files";
 
 const router = Router();
 
-router.post("/register", async (req, res) => {
-  const { authorizationStatus, token, user } = await registration(req.body);
-  res.status(authorizationStatus ? 200 : 403).json(
-    authorizationStatus
-      ? { authorizationStatus, token, user }
-      : {
-          message:
-            "Registration failed. User with received login or email already exists",
-        }
-  );
-});
+router.post(
+  "/register",
+  loader.single("avatar"),
+  setImage,
+  async (req, res) => {
+    const { authorizationStatus, token, user } = await registration(req.body);
+    if (!authorizationStatus) {
+      await deleteImage(req.body.imgPublicId);
+    }
+    res.status(authorizationStatus ? 200 : 403).json(
+      authorizationStatus
+        ? { authorizationStatus, token, user }
+        : {
+            message:
+              "Registration failed. User with received login or email already exists",
+          }
+    );
+  }
+);
 
 router.put("/authorization", async (req, res) => {
   const { authorizationStatus, token, user } = await authorizeViaLogin(
@@ -92,6 +100,12 @@ router.put(
       } catch ({ message, name }) {
         res.status(400).json({ message, name, body: req.body });
       }
+    } else {
+      res.status(400).json({
+        message: "Not all parameters fullfield",
+        name: "custom error",
+        body: req.body,
+      });
     }
   }
 );

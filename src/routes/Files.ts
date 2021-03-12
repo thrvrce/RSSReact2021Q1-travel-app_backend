@@ -7,6 +7,11 @@ import { UPLOAD_PRESET_DELETEFILE } from "../Const";
 
 const loader = multer({ dest: path.join(__dirname, "tmp") });
 
+async function deleteImage(imgPublicId: string) {
+  const deleteStatus = await cloudinary.uploader.destroy(imgPublicId);
+  return deleteStatus.result;
+}
+
 async function setImage(
   req: express.Request,
   res: express.Response,
@@ -29,10 +34,11 @@ async function setImage(
       }
     } else {
       try {
-        const deleteStatus = await cloudinary.uploader.destroy(
-          req.body.imgPublicId
-        );
-        if (deleteStatus.result === "ok") {
+        // const deleteStatus = await cloudinary.uploader.destroy(
+        //   req.body.imgPublicId
+        // );
+        const result: string = await deleteImage(req.body.imgPublicId);
+        if (result === "ok") {
           req.body.imgPublicId = "";
           req.body.imgSecureUrl = "";
         }
@@ -45,4 +51,4 @@ async function setImage(
   next();
 }
 
-export { loader, setImage };
+export { loader, setImage, deleteImage };
