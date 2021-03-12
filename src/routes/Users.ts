@@ -8,7 +8,7 @@ import {
 } from "../storage/Users";
 
 import { userUpdateResult } from "../Types";
-import { loader, loadImage } from "./Files";
+import { loader, setImage } from "./Files";
 
 const router = Router();
 
@@ -53,10 +53,15 @@ router.delete("/logout", async (req, res) => {
   res.status(200).json({ authorizationStatus });
 });
 
+/*
+в строке запроса указывается логин ка кпарметр для последующего поиска записи пользователя для изменения.
+в заголовке запроса указывается token для проверки авторизации пользователя вносящего изменения.
+При внесении изменний в аватар требуется указать заголовок uploadPreset с значением константы UPLOAD_PRESET_AVATAR (загрузка) или UPLOAD_PRESET_DELETEFILE (удаление). См. setImage.
+*/
 router.put(
   "/update/:login",
   loader.single("avatar"),
-  loadImage,
+  setImage,
   async (req, res) => {
     if (
       req.params.login &&
@@ -81,7 +86,7 @@ router.put(
         } else if (updateResult.authorizationStatus) {
           res.status(500);
         } else {
-          res.status(401).json(updateResult);
+          res.status(401);
         }
         res.json(updateResult);
       } catch ({ message, name }) {
