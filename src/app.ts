@@ -22,7 +22,7 @@ function normalizePort(val: any) {
   return false;
 }
 //
-const PORT: number | string | boolean = normalizePort(process.env.port || 3000);
+const PORT: number | string | boolean = normalizePort(process.env.PORT || 3001);
 const app = express();
 
 app.use(cors());
@@ -53,3 +53,4 @@ app.set("port", PORT);
 app.listen(PORT, () => {
   console.log(`current port ${app.get("port")}`);
 });
+console.log(process.env.port, process.env.PORT);

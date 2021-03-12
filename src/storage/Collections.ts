@@ -9,7 +9,7 @@ const SIGHTS = "Sights";
 const REVIEWS = "Reviews";
 
 async function getMongoInstance() {
-  const client = await MongoClient.connect(URL);
+  const client = await MongoClient.connect(URL, { useUnifiedTopology: true });
   return client.db(DBNAME);
 }
 
