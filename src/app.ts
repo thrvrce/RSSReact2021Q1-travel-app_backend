@@ -30,6 +30,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/user", Users);
+app.get("/", async (req, res) => {
+  res.json({ message: "Hello there" });
+});
 
 app.use((req, res) => {
   res.status(404).json({
