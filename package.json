@@ -6,7 +6,11 @@
   "scripts": {
     "lint": "eslint --fix --ext .ts src/**",
     "dev": "nodemon  --inspect --watch 'src/**/*.ts' --verbose  --exec 'npm run ts-node' --inspect src/app.ts",
-    "tsnode": "ts-node"
+    "tsnode": "ts-node",
+		"start": "node dist/app.js",
+    "build": "tsc",
+    "postinstall": "npm run build"
+
   },
   "repository": {
     "type": "git",
