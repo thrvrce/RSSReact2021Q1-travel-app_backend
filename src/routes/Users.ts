@@ -8,6 +8,7 @@ import {
 } from "../storage/Users";
 
 import { userUpdateResult } from "../Types";
+import { loader, loadImage } from "./Files";
 
 const router = Router();
 
@@ -52,19 +53,42 @@ router.delete("/logout", async (req, res) => {
   res.status(200).json({ authorizationStatus });
 });
 
-router.put("/update", async (req, res) => {
-  try {
-    const updateResult: userUpdateResult = await updateUSer(req.body);
-    if (updateResult.updateStatus) {
-      res.status(200);
-    } else if (updateResult.authorizationStatus) {
-      res.status(500);
-    } else {
-      res.status(401).json(updateResult);
+router.put(
+  "/update/:login",
+  loader.single("avatar"),
+  loadImage,
+  async (req, res) => {
+    if (
+      req.params.login &&
+      Object.keys(req.body).length &&
+      req.header("token") !== undefined
+    ) {
+      try {
+        const updatePArameters = {
+          filter: {
+            login: req.params.login || "",
+          },
+          updateFields: {
+            ...req.body,
+          },
+          token: req.header("token") || "",
+        };
+        const updateResult: userUpdateResult = await updateUSer(
+          updatePArameters
+        );
+        if (updateResult.updateStatus) {
+          res.status(200);
+        } else if (updateResult.authorizationStatus) {
+          res.status(500);
+        } else {
+          res.status(401).json(updateResult);
+        }
+        res.json(updateResult);
+      } catch ({ message, name }) {
+        res.status(400).json({ message, name, body: req.body });
+      }
     }
-    res.json(updateResult);
-  } catch ({ message, name }) {
-    res.status(400).json({ message, name, body: req.body });
   }
-});
+);
+
 export default router;

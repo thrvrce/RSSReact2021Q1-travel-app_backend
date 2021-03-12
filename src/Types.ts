@@ -3,12 +3,19 @@ type loginCredentials = {
   password: string;
 };
 
-type userRegistrationData = loginCredentials & { email: string; name: string };
+type userRegistrationData = loginCredentials & {
+  email: string;
+  name: string;
+  imgSecureUrl: string;
+  imgPublicId: string;
+};
 
 type userPublicData = {
   login: string;
   email: string;
   name: string;
+  imgSecureUrl: string;
+  imgPublicId: string;
 };
 
 type userSchema = userPublicData & { passwordHash: string };
@@ -30,7 +37,9 @@ type updateUser = {
     login: string;
   };
   updateFields: {
-    name: string;
+    name?: string;
+    imgSecureUrl?: string;
+    imgPublicId?: string;
   };
   token: string;
 };

@@ -1,6 +1,13 @@
 import express from "express";
 import cors from "cors";
+import { v2 as cloudinary } from "cloudinary";
+// const cloudinary = require("cloudinary").v2;
+import multer from "multer";
+import path from "path";
+import { promises as fs } from "fs";
 import Users from "./routes/Users";
+// require("dotenv").config();
+const loader = multer({ dest: path.join(__dirname, "tmp") });
 
 function normalizePort(val: any) {
   const port = parseInt(val, 10);
@@ -11,10 +18,10 @@ function normalizePort(val: any) {
   if (port >= 0) {
     return port;
   }
-
+  //
   return false;
 }
-
+//
 const PORT: number | string | boolean = normalizePort(process.env.port || 3000);
 const app = express();
 

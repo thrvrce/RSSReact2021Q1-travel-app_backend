@@ -77,6 +77,8 @@ async function getAuthorizationResult(
       login: insertedUser.login,
       email: insertedUser.email,
       name: insertedUser.name,
+      imgPublicId: insertedUser.imgPublicId,
+      imgSecureUrl: insertedUser.imgSecureUrl,
     },
   };
 }
@@ -113,6 +115,8 @@ async function registration({
       email,
       name,
       passwordHash: getPasswordHash(password),
+      imgSecureUrl: "",
+      imgPublicId: "",
     };
     users.insertOne(newUser);
     const sessions = await sessionsCollection;
