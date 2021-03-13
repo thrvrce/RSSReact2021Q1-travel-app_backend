@@ -8,7 +8,7 @@ import {
 } from "../storage/Users";
 
 import { userUpdateResult } from "../Types";
-import { loader, setImage, deleteImage } from "./Files";
+import { loader, setImage, deleteImage } from "../middleware/Files";
 
 const router = Router();
 
