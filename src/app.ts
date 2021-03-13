@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import Users from "./routes/Users";
 import Countries from "./routes/Countries";
+import Places from "./routes/Places";
 
 function normalizePort(val: any) {
   const port = parseInt(val, 10);
@@ -24,7 +25,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/user", Users);
-app.use("/country", Countries);
+app.use("/countr", Countries);
+app.use("/places", Places);
+
 app.get("/", async (req, res) => {
   res.json({ message: "Hello there" });
 });

@@ -54,6 +54,16 @@ type userUpdateResult = documentUpdateResult & {
   updatedUser: userPublicData | null;
 };
 type updateAnyDocFilterObj = updateUser;
+
+type Place = {
+  countryIsoCode: string;
+  photoUrl: string;
+  localizations: {
+    lang: string;
+    description: string;
+    name: string;
+  }[];
+};
 export {
   userRegistrationData,
   loginCredentials,
@@ -65,4 +75,5 @@ export {
   userPublicData,
   documentUpdateResult,
   userUpdateResult,
+  Place,
 };

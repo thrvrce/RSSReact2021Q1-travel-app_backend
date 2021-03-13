@@ -5,7 +5,7 @@ const DBNAME: string = "travel-app";
 const USERS = "Users";
 const SESSIONS = "Sessions";
 const COUNTRIES = "Countries";
-const SIGHTS = "Sights";
+const PLACES = "Places";
 const REVIEWS = "Reviews";
 
 async function getMongoInstance() {
@@ -21,13 +21,13 @@ async function getCollection(collectionName: string) {
 const usersCollection = getCollection(USERS);
 const sessionsCollection = getCollection(SESSIONS);
 const countriesCollection = getCollection(COUNTRIES);
-const sightsCollection = getCollection(SIGHTS);
+const placesCollection = getCollection(PLACES);
 const reviewsCollection = getCollection(REVIEWS);
 
 export {
   usersCollection,
   sessionsCollection,
   countriesCollection,
-  sightsCollection,
+  placesCollection,
   reviewsCollection,
 };
