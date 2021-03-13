@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {
   getAllCounties,
-  getCountryByName,
+  getCountryByNameOrCapital,
   insertCountry,
   deleteCountry,
 } from "../storage/Countries";
@@ -13,7 +13,7 @@ router.get("/getall", async (req, res) => {
 });
 
 router.get("/getbyname/:name", async (req, res) => {
-  const reqResult = await getCountryByName(req.params.name);
+  const reqResult = await getCountryByNameOrCapital(req.params.name);
   res.status(200).json(reqResult);
 });
 

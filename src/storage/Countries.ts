@@ -10,10 +10,13 @@ async function getAllCounties() {
   return arrOfCountries;
 }
 
-async function getCountryByName(name: string) {
+async function getCountryByNameOrCapital(searchStr: string) {
   const contries = await countriesCollection;
   const country = await contries.findOne({
-    localizations: { $elemMatch: { name } },
+    $or: [
+      { localizations: { $elemMatch: { name: searchStr } } },
+      { localizations: { $elemMatch: { capital: searchStr } } },
+    ],
   });
   return country;
 }
@@ -31,4 +34,9 @@ async function deleteCountry(name: string) {
   });
   return country.deletedCount;
 }
-export { getAllCounties, getCountryByName, insertCountry, deleteCountry };
+export {
+  getAllCounties,
+  getCountryByNameOrCapital,
+  insertCountry,
+  deleteCountry,
+};
