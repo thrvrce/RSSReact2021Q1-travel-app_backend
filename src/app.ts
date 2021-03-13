@@ -3,7 +3,7 @@ import cors from "cors";
 import Users from "./routes/Users";
 import Countries from "./routes/Countries";
 import Places from "./routes/Places";
-
+import Reviews from "./routes/Reviews";
 function normalizePort(val: any) {
   const port = parseInt(val, 10);
   if (Number.isNaN(port)) {
@@ -27,6 +27,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/user", Users);
 app.use("/countr", Countries);
 app.use("/places", Places);
+app.use("/reviews", Reviews);
 
 app.get("/", async (req, res) => {
   res.json({ message: "Hello there" });

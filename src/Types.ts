@@ -1,3 +1,6 @@
+import { ObjectId } from "bson";
+import { type } from "node:os";
+
 type loginCredentials = {
   login: string;
   password: string;
@@ -64,6 +67,24 @@ type Place = {
     name: string;
   }[];
 };
+
+type Review = {
+  placeId: string;
+  userLogin: string;
+  rating: number;
+  reviewText: string;
+};
+
+type updateReview = {
+  filter: {
+    _id: ObjectId;
+  };
+  updateFields: {
+    rating?: string;
+    reviewText?: string;
+  };
+  token: string;
+};
 export {
   userRegistrationData,
   loginCredentials,
@@ -76,4 +97,6 @@ export {
   documentUpdateResult,
   userUpdateResult,
   Place,
+  Review,
+  updateReview,
 };
