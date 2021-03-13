@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import Users from "./routes/Users";
+import Countries from "./routes/Countries";
 
 function normalizePort(val: any) {
   const port = parseInt(val, 10);
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/user", Users);
+app.use("/country", Countries);
 app.get("/", async (req, res) => {
   res.json({ message: "Hello there" });
 });
