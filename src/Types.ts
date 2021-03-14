@@ -1,5 +1,4 @@
 import { ObjectId } from "bson";
-import { type } from "node:os";
 
 type loginCredentials = {
   login: string;
