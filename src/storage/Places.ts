@@ -10,6 +10,17 @@ async function getAllPlacess(): Promise<Place[] | null> {
   return arrOfCountries;
 }
 
+async function getallbycountry(
+  countryisocode: string
+): Promise<Place[] | null> {
+  const places = await placesCollection;
+  const arrOfCountries = await places
+    .find({ countryIsoCode: countryisocode })
+    .map((place) => place)
+    .toArray();
+  return arrOfCountries;
+}
+
 async function getPlaceByName(searchStr: string): Promise<Place> {
   const places = await placesCollection;
   const place = await places.findOne({
@@ -24,4 +35,4 @@ async function insertPlace(place: Place): Promise<boolean> {
   return Boolean(insertedCount);
 }
 
-export { getAllPlacess, getPlaceByName, insertPlace };
+export { getAllPlacess, getPlaceByName, insertPlace, getallbycountry };

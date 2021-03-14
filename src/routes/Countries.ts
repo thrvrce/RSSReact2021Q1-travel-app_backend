@@ -5,6 +5,7 @@ import {
   insertCountry,
   deleteCountry,
 } from "../storage/Countries";
+
 const router = Router();
 
 router.get("/getall", async (req, res) => {

@@ -1,5 +1,10 @@
 import { Router } from "express";
-import { getAllPlacess, getPlaceByName, insertPlace } from "../storage/Places";
+import {
+  getAllPlacess,
+  getPlaceByName,
+  insertPlace,
+  getallbycountry,
+} from "../storage/Places";
 
 const router = Router();
 
@@ -10,6 +15,11 @@ router.get("/getall", async (req, res) => {
 
 router.get("/getbyname/:name", async (req, res) => {
   const reqResult = await getPlaceByName(req.params.name);
+  res.status(200).json(reqResult);
+});
+
+router.get("/getallbycountry/:countryisocode", async (req, res) => {
+  const reqResult = await getallbycountry(req.params.countryisocode);
   res.status(200).json(reqResult);
 });
 
