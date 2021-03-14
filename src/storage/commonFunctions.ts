@@ -44,11 +44,11 @@ function setResStatus({
   operationResult,
   authorizationStatus,
 }: reviewInsDelResult) {
-  if (!operationResult) {
-    return 500;
-  }
   if (!authorizationStatus) {
     return 401;
+  }
+  if (!operationResult) {
+    return 500;
   }
   return 200;
 }
