@@ -12,7 +12,7 @@ import {
   documentUpdateResult,
   userUpdateResult,
 } from "../Types";
-import updateOneAnyDocument from "./commonFunctions";
+import { updateOneAnyDocument } from "./commonFunctions";
 
 function getPasswordHash(password: string): string {
   return md5(password + process.env.passwordSalt);

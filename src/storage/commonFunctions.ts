@@ -1,8 +1,8 @@
 import { Collection } from "mongodb";
 import { checkSession } from "./Users";
-import { documentUpdateResult } from "../Types";
+import { documentUpdateResult, reviewInsDelResult } from "../Types";
 
-export default async function updateOneAnyDocument(
+async function updateOneAnyDocument(
   anyCollection: Promise<Collection<any>>,
   filterObj: object,
   updateObj: object,
@@ -39,3 +39,18 @@ export default async function updateOneAnyDocument(
   }
   return docUpdResult;
 }
+
+function setResStatus({
+  operationResult,
+  authorizationStatus,
+}: reviewInsDelResult) {
+  if (!operationResult) {
+    return 500;
+  }
+  if (!authorizationStatus) {
+    return 401;
+  }
+  return 200;
+}
+
+export { updateOneAnyDocument, setResStatus };

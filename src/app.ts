@@ -4,6 +4,7 @@ import Users from "./routes/Users";
 import Countries from "./routes/Countries";
 import Places from "./routes/Places";
 import Reviews from "./routes/Reviews";
+
 function normalizePort(val: any) {
   const port = parseInt(val, 10);
   if (Number.isNaN(port)) {

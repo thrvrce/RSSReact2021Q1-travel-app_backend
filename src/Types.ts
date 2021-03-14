@@ -86,6 +86,11 @@ type updateReview = {
   token: string;
 };
 
+type reviewInsDelResult = {
+  authorizationStatus: boolean;
+  operationResult: boolean;
+};
+
 type Country = {
   capitalLocation: {
     coordinates: number[];
@@ -118,4 +123,5 @@ export {
   Review,
   updateReview,
   Country,
+  reviewInsDelResult,
 };

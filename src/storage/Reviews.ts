@@ -1,13 +1,28 @@
 import { ObjectId } from "bson";
 import { reviewsCollection } from "./Collections";
-import { Review, updateReview, documentUpdateResult } from "../Types";
-import updateOneAnyDocument from "./commonFunctions";
+import {
+  Review,
+  updateReview,
+  documentUpdateResult,
+  reviewInsDelResult,
+} from "../Types";
+import { updateOneAnyDocument } from "./commonFunctions";
 import { checkSession } from "./Users";
 
-async function insertReview(newReview: Review): Promise<boolean> {
-  const reviews = await reviewsCollection;
-  const { insertedCount } = await reviews.insertOne(newReview);
-  return Boolean(insertedCount);
+async function insertReview(newReview: Review, token: string) {
+  const result: reviewInsDelResult = {
+    authorizationStatus: false,
+    operationResult: false,
+  };
+  const { authorizationStatus } = await checkSession(token);
+
+  if (authorizationStatus) {
+    result.authorizationStatus = authorizationStatus;
+    const reviews = await reviewsCollection;
+    const { insertedCount } = await reviews.insertOne(newReview);
+    result.operationResult = Boolean(insertedCount);
+  }
+  return result;
 }
 
 async function getAllReviews(): Promise<Review[]> {
@@ -46,9 +61,9 @@ async function updateReviewById({
 }
 
 async function deleteReviewById(id: string, token: string) {
-  const result = {
+  const result: reviewInsDelResult = {
     authorizationStatus: false,
-    deleted: false,
+    operationResult: false,
   };
   const { authorizationStatus } = await checkSession(token);
 
@@ -56,7 +71,7 @@ async function deleteReviewById(id: string, token: string) {
     result.authorizationStatus = authorizationStatus;
     const reviews = await reviewsCollection;
     const { deletedCount } = await reviews.deleteOne({ _id: new ObjectId(id) });
-    result.deleted = Boolean(deletedCount);
+    result.operationResult = Boolean(deletedCount);
   }
   return result;
 }

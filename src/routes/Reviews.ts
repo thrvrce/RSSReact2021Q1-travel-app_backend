@@ -1,6 +1,6 @@
 import { ObjectId } from "bson";
 import { Router } from "express";
-
+import { reviewInsDelResult } from "../Types";
 import {
   insertReview,
   getAllReviews,
@@ -8,12 +8,14 @@ import {
   updateReviewById,
   deleteReviewById,
 } from "../storage/Reviews";
+import { setResStatus } from "../storage/commonFunctions";
 
 const router = Router();
 
 router.post("/add", async (req, res) => {
-  const reqResult = await insertReview(req.body);
-  res.status(200).json(reqResult);
+  const reqResult = await insertReview(req.body, req.header("token") || "");
+  res.status(setResStatus(reqResult));
+  res.json(reqResult);
 });
 
 router.get("/getall", async (req, res) => {
@@ -52,18 +54,12 @@ router.put("/updatebyid/:id", async (req, res) => {
 });
 
 router.delete("/deletebyid/:id", async (req, res) => {
-  const { authorizationStatus, deleted } = await deleteReviewById(
+  const reqResult: reviewInsDelResult = await deleteReviewById(
     req.params.id,
     req.header("token") || ""
   );
-  if (deleted) {
-    res.status(200);
-  } else if (authorizationStatus) {
-    res.status(500);
-  } else {
-    res.status(401);
-  }
-  res.json({ authorizationStatus, deleted });
+  res.status(setResStatus(reqResult));
+  res.json(reqResult);
 });
 
 export default router;
