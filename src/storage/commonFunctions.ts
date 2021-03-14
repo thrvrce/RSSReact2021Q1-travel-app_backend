@@ -47,9 +47,9 @@ function setResStatus({
   if (!authorizationStatus) {
     return 401;
   }
-  if (!operationResult) {
-    return 500;
-  }
+  // if (!operationResult) {
+  //   return 500;
+  // }
   return 200;
 }
 
