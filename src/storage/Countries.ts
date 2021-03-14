@@ -1,8 +1,9 @@
 import { countriesCollection } from "./Collections";
+import { Country } from "../Types";
 
-async function getAllCounties() {
+async function getAllCounties(): Promise<Country[]> {
   const countries = await countriesCollection;
-  const arrOfCountries = await countries
+  const arrOfCountries: Country[] = await countries
     .find()
     .map((country) => country)
     .toArray();
@@ -10,9 +11,9 @@ async function getAllCounties() {
   return arrOfCountries;
 }
 
-async function getCountryByNameOrCapital(searchStr: string) {
+async function getCountryByNameOrCapital(searchStr: string): Promise<Country> {
   const contries = await countriesCollection;
-  const country = await contries.findOne({
+  const country: Country = await contries.findOne({
     $or: [
       { localizations: { $elemMatch: { name: searchStr } } },
       { localizations: { $elemMatch: { capital: searchStr } } },
@@ -21,18 +22,18 @@ async function getCountryByNameOrCapital(searchStr: string) {
   return country;
 }
 
-async function insertCountry(country: any) {
-  const countris = await countriesCollection;
-  const insrtedCountry = await countris.insertOne(country);
-  return insrtedCountry.insertedCount;
+async function insertCountry(country: Country): Promise<boolean> {
+  const countries = await countriesCollection;
+  const insrtedCountry = await countries.insertOne(country);
+  return Boolean(insrtedCountry.insertedCount);
 }
 
-async function deleteCountry(name: string) {
+async function deleteCountry(name: string): Promise<boolean> {
   const contries = await countriesCollection;
   const country = await contries.deleteOne({
     localizations: { $elemMatch: { name } },
   });
-  return country.deletedCount;
+  return Boolean(country.deletedCount);
 }
 export {
   getAllCounties,

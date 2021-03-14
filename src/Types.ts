@@ -85,6 +85,24 @@ type updateReview = {
   };
   token: string;
 };
+
+type Country = {
+  capitalLocation: {
+    coordinates: number[];
+    type: string;
+  };
+  imageUrl: string;
+  videoUrl: string;
+  currency: string;
+  ISOCode: string;
+  UTCTimezone: number;
+  localizations: {
+    lang: string;
+    capital: string;
+    description: string;
+    name: string;
+  }[];
+};
 export {
   userRegistrationData,
   loginCredentials,
@@ -99,4 +117,5 @@ export {
   Place,
   Review,
   updateReview,
+  Country,
 };
