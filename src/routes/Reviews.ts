@@ -3,7 +3,7 @@ import { Router } from "express";
 import { reviewInsDelResult } from "../Types";
 import {
   insertReview,
-  getAllReviews,
+  getAllReviewsByPlaceId,
   getReviewById,
   updateReviewById,
   deleteReviewById,
@@ -18,8 +18,8 @@ router.post("/add", async (req, res) => {
   res.json(reqResult);
 });
 
-router.get("/getall", async (req, res) => {
-  const reqResult = await getAllReviews();
+router.get("/getallbyplaceid/:placeid", async (req, res) => {
+  const reqResult = await getAllReviewsByPlaceId(req.params.placeid);
   res.status(200).json(reqResult);
 });
 

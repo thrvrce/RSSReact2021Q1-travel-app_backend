@@ -38,11 +38,7 @@ router.put("/authorization", async (req, res) => {
   );
   res
     .status(authorizationStatus ? 200 : 401)
-    .json(
-      authorizationStatus
-        ? { authorizationStatus, token, user }
-        : { message: "User not found" }
-    );
+    .json({ authorizationStatus, token, user });
 });
 
 router.put("/checksession", async (req, res) => {

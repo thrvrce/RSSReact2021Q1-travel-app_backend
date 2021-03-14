@@ -25,10 +25,10 @@ async function insertReview(newReview: Review, token: string) {
   return result;
 }
 
-async function getAllReviews(): Promise<Review[]> {
+async function getAllReviewsByPlaceId(placeId: string): Promise<Review[]> {
   const reviews = await reviewsCollection;
   const arrOfReviews = await reviews
-    .find()
+    .find({ placeId })
     .map((review) => review)
     .toArray();
   return arrOfReviews;
@@ -77,7 +77,7 @@ async function deleteReviewById(id: string, token: string) {
 }
 export {
   insertReview,
-  getAllReviews,
+  getAllReviewsByPlaceId,
   getReviewById,
   updateReviewById,
   deleteReviewById,
