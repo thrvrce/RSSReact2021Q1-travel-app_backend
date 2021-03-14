@@ -24,8 +24,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use("/user", Users);
-app.use("/countr", Countries);
+app.use("/users", Users);
+app.use("/countries", Countries);
 app.use("/places", Places);
 app.use("/reviews", Reviews);
 
