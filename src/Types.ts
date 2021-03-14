@@ -79,7 +79,7 @@ type updateReview = {
     _id: ObjectId;
   };
   updateFields: {
-    rating?: string;
+    rating?: number;
     reviewText?: string;
   };
   token: string;
