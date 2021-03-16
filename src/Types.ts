@@ -106,6 +106,7 @@ type Country = {
     description: string;
     name: string;
   }[];
+  timeZone: string;
 };
 export {
   userRegistrationData,
