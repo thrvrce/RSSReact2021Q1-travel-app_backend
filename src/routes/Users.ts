@@ -17,44 +17,73 @@ router.post(
   loader.single("avatar"),
   setImage,
   async (req, res) => {
-    const { authorizationStatus, token, user } = await registration(req.body);
-    if (!authorizationStatus && req.file) {
-      await deleteImage(req.body.imgPublicId);
+    try {
+      const { authorizationStatus, token, user } = await registration(req.body);
+      if (!authorizationStatus && req.file) {
+        await deleteImage(req.body.imgPublicId);
+      }
+      res.status(authorizationStatus ? 200 : 403).json({
+        authorizationStatus,
+        token,
+        user,
+        message: authorizationStatus ? "Ok" : "Login or email alredy taken.",
+      });
+    } catch ({ message, name }) {
+      res.status(500).json({
+        authorizationStatus: false,
+        token: "",
+        user: null,
+        message: `${name}. ${message}`,
+      });
     }
-    res.status(authorizationStatus ? 200 : 403).json(
-      authorizationStatus
-        ? { authorizationStatus, token, user }
-        : {
-            message:
-              "Registration failed. User with received login or email already exists",
-          }
-    );
   }
 );
 
 router.put("/authorization", async (req, res) => {
-  const { authorizationStatus, token, user } = await authorizeViaLogin(
-    req.body
-  );
-  res
-    .status(authorizationStatus ? 200 : 401)
-    .json({ authorizationStatus, token, user });
+  try {
+    const { authorizationStatus, token, user } = await authorizeViaLogin(
+      req.body
+    );
+    res.status(authorizationStatus ? 200 : 401).json({
+      authorizationStatus,
+      token,
+      user,
+      message: authorizationStatus ? "Ok" : "Not authorized.",
+    });
+  } catch ({ message, name }) {
+    res.status(500).json({
+      authorizationStatus: false,
+      token: "",
+      user: null,
+      message: `${name}. ${message}`,
+    });
+  }
 });
 
 router.put("/checksession", async (req, res) => {
   const { authorizationStatus, user } = await checkSession(req.body.token);
-  res.status(authorizationStatus ? 200 : 401).json(
-    authorizationStatus
-      ? { authorizationStatus, user }
-      : {
-          message: "Session expired.",
-        }
-  );
+  res
+    .status(authorizationStatus ? 200 : 401)
+    .json({ authorizationStatus, user, token: req.body.token });
 });
 
 router.delete("/logout", async (req, res) => {
-  const authorizationStatus = await logOut(req.body.login);
-  res.status(200).json({ authorizationStatus });
+  try {
+    const authorizationStatus = await logOut(req.body.login);
+    res.status(200).json({
+      authorizationStatus,
+      token: "",
+      user: null,
+      message: "Ок",
+    });
+  } catch ({ message, name }) {
+    res.status(500).json({
+      authorizationStatus: false,
+      token: "",
+      user: null,
+      message: `${name}. ${message}`,
+    });
+  }
 });
 
 /*

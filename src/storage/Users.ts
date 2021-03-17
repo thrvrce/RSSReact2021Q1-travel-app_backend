@@ -93,7 +93,8 @@ function setDefaultAuthorizationResult(): authorizationResult {
 
 async function deleteAllUserSessions(login: string) {
   const sessions = await sessionsCollection;
-  await sessions.deleteMany({ login });
+  const { deletedCount } = await sessions.deleteMany({ login });
+  return deletedCount;
 }
 
 async function registration({
@@ -169,7 +170,7 @@ async function checkSession(token: string): Promise<authorizationResult> {
 
 async function logOut(login: string): Promise<boolean> {
   deleteAllUserSessions(login);
-  return true;
+  return false;
 }
 
 async function updateUSer({
