@@ -18,7 +18,7 @@ router.post(
   setImage,
   async (req, res) => {
     const { authorizationStatus, token, user } = await registration(req.body);
-    if (!authorizationStatus) {
+    if (!authorizationStatus && req.file) {
       await deleteImage(req.body.imgPublicId);
     }
     res.status(authorizationStatus ? 200 : 403).json(
